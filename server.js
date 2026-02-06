@@ -27,9 +27,7 @@ app.use("/api/users", userRoutes);
 
 app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-app.get("*", (req, res) => {
-	res.send('irfancsrrsimt@gmail.com/chat-app backend is running...');
-});
+
 app.get('/',(req,res)=>{
 	res.send('hello world..');
 	console.log('hello world..');
