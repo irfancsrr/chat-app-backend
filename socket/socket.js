@@ -1,35 +1,33 @@
 import { Server } from "socket.io";
 import http from "http";
+import express from "express";
 
-let io;
-let server;
+const app = express();
 
-export function initSocket(app) {
-  server = http.createServer(app);
-  io = new Server(server, {
-    cors: {
-      origin: "https://chat-app-frontend-roan-nine.vercel.app",
-      methods: ["GET", "POST"],
-      credentials: true
-    }
-  });
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: "https://chat-app-frontend-roan-nine.vercel.app", methods: ["GET", "POST"], credentials: true } });
 
-  const userSocketMap = {};
+export const getReceiverSocketId = (receiverId) => {
+	return userSocketMap[receiverId];
+};
 
-  io.on("connection", (socket) => {
-    console.log("a user connected", socket.id);
+const userSocketMap = {}; // {userId: socketId}
 
-    const userId = socket.handshake.query.userId;
-    if (userId !== "undefined") userSocketMap[userId] = socket.id;
+io.on("connection", (socket) => {
+	console.log("a user connected", socket.id);
 
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+	const userId = socket.handshake.query.userId;
+	if (userId != "undefined") userSocketMap[userId] = socket.id;
 
-    socket.on("disconnect", () => {
-      console.log("user disconnected", socket.id);
-      delete userSocketMap[userId];
-      io.emit("getOnlineUsers", Object.keys(userSocketMap));
-    });
-  });
+	// io.emit() is used to send events to all the connected clients
+	io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
-  return { io, server };
-}
+	// socket.on() is used to listen to the events. can be used both on client and server side
+	socket.on("disconnect", () => {
+		console.log("user disconnected", socket.id);
+		delete userSocketMap[userId];
+		io.emit("getOnlineUsers", Object.keys(userSocketMap));
+	});
+});
+
+export { app, io, server };
