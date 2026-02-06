@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
 
 app.get('/',(req,res)=>{
-	res.send('hello world..');
+	res.send('irfancsrrsimt@gmail.com/chat-app is running ...');
 	console.log('hello world..');
 })
 server.listen(PORT, () => {
