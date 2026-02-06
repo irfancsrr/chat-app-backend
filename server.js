@@ -17,7 +17,7 @@ const __dirname = path.resolve();
 // PORT should be assigned after calling dotenv.config() because we need to access the env variables. Didn't realize while recording the video. Sorry for the confusion.
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: "http://localhost:3000", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
+app.use(cors({ origin: "https://chat-app-frontend-roan-nine.vercel.app", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)
 app.use(cookieParser());
 
