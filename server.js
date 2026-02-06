@@ -32,7 +32,11 @@ app.get('/',(req,res)=>{
 	res.send('irfancsrrsimt@gmail.com/chat-app is running ...');
 	console.log('hello world..');
 })
-server.listen(PORT, () => {
-	connectToMongoDB();
-	console.log(`Server Running on port ${PORT}`);
-});
+
+connectToMongoDB();//for vercel
+export default app;// for vercel
+
+// server.listen(PORT, () => {
+// 	connectToMongoDB();
+// 	console.log(`Server Running on port ${PORT}`);
+// });
