@@ -2,23 +2,24 @@ import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import userRoutes from "./routes/user.routes.js";
-
 import connectToMongoDB from "./db/connectToMongoDB.js";
-import { app, server } from "./socket/socket.js";
-import cors from "cors";
+import { initSocket } from "./socket/socket.js";
 
 dotenv.config();
-
 const __dirname = path.resolve();
-// PORT should be assigned after calling dotenv.config() because we need to access the env variables. Didn't realize while recording the video. Sorry for the confusion.
-const PORT = process.env.PORT || 5000;
+const app = express();
 
-app.use(cors({ origin: "https://chat-app-frontend-roan-nine.vercel.app", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
-app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)
+app.use(cors({
+  origin: "https://chat-app-frontend-roan-nine.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
@@ -27,16 +28,23 @@ app.use("/api/users", userRoutes);
 
 app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
+app.get("/", (req, res) => {
+  res.send("Backend is running...");
+});
 
-app.get('/',(req,res)=>{
-	res.send('irfancsrrsimt@gmail.com/chat-app is running ...');
-	console.log('hello world..');
-})
+// ✅ MongoDB connect
+connectToMongoDB();
 
-connectToMongoDB();//for vercel
-export default app;// for vercel
+// ✅ Socket init
+const { server } = initSocket(app);
 
-// server.listen(PORT, () => {
-// 	connectToMongoDB();
-// 	console.log(`Server Running on port ${PORT}`);
-// });
+// Local run ke liye
+// if (process.env.NODE_ENV !== "production") {
+//   const PORT = process.env.PORT || 5000;
+//   server.listen(PORT, () => {
+//     console.log(`Server running on port ${PORT}`);
+//   });
+// }
+
+// Vercel ke liye
+export default app;
