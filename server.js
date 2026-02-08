@@ -17,9 +17,9 @@ const __dirname = path.resolve();
 // PORT should be assigned after calling dotenv.config() because we need to access the env variables. Didn't realize while recording the video. Sorry for the confusion.
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: "https://chat-app-frontend-roan-nine.vercel.app", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)
 app.use(cookieParser());
+app.use(cors({ origin: process.env.FRONTEND_URL, methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
@@ -33,10 +33,10 @@ app.get('/',(req,res)=>{
 	console.log('hello world..');
 })
 
-connectToMongoDB();//for vercel
-export default app;// for vercel
+// connectToMongoDB();//for vercel
+// export default app;// for vercel
 
-// server.listen(PORT, () => {
-// 	connectToMongoDB();
-// 	console.log(`Server Running on port ${PORT}`);
-// });
+server.listen(PORT, () => {
+	connectToMongoDB();
+	console.log(`Server Running on port ${PORT}`);
+});
