@@ -33,6 +33,11 @@ app.get('/',(req,res)=>{
 	console.log('hello world..');
 })
 
+app.get('/hello',(req,res)=>{
+	res.send('hii how are u ...');
+	console.log('hello world..');
+})
+
 // connectToMongoDB();//for vercel
 // export default app;// for vercel
 
